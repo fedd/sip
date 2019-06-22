@@ -73,13 +73,17 @@ public class RequestReceived extends AbstractMessageReceived implements Request 
                 try {
                     int mfi = Integer.parseInt(mf);
                     mfi--;
-                    maxForwards.add(mf);
+                    maxForwards.add(Integer.toString(mfi));
                 } catch (NumberFormatException e) {
                     maxForwards.add("70");
                 }
             }
         }
         return ret;
+    }
+
+    public ResponseToSend getToRespond(String statusCode, String statusName, InputStream body) {
+        return new ResponseToSend(_protocol + " " + statusCode + " " + statusName, getHeaders(), body);
     }
 
 }

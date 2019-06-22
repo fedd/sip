@@ -75,7 +75,7 @@ public class ResponseReceived extends AbstractMessageReceived implements Respons
                 try {
                     int mfi = Integer.parseInt(mf);
                     mfi--;
-                    maxForwards.add(mf);
+                    maxForwards.add(Integer.toString(mfi));
                 } catch (NumberFormatException e) {
                     maxForwards.add("70");
                 }
