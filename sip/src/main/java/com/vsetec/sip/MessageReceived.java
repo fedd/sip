@@ -27,7 +27,7 @@ import java.util.List;
  *
  * @author fedd
  */
-public abstract class MessageReceived implements Message {
+public abstract class MessageReceived implements Message, Received {
 
     private final String _firstLine;
     private final LinkedHashMap<String, List<String>> _headers = new LinkedHashMap();
@@ -74,10 +74,11 @@ public abstract class MessageReceived implements Message {
         return _headers;
     }
 
+    @Override
     public InputStream getBody() {
         return _body;
     }
 
-    public abstract MessageToSend getToForward(String via);
+    public abstract MessageSendable getToForward(String via);
 
 }

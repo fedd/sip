@@ -13,17 +13,22 @@ import java.util.List;
  *
  * @author fedd
  */
-public class RequestToSend extends MessageToSend implements Request {
+public class RequestSendable extends MessageSendable implements Request {
 
     private final String _protocol;
     private final String _method;
     private final String _uri;
 
-    public RequestToSend(String protocol, String method, String uri, LinkedHashMap<String, List<String>> headers, InputStream body) {
-        super(protocol, method, uri, headers, body);
+    public RequestSendable(String protocol, String method, String uri, LinkedHashMap<String, List<String>> headers, InputStream body) {
+        super(headers, body);
         _method = method;
         _uri = uri;
         _protocol = protocol;
+    }
+
+    @Override
+    String getFirstLine() {
+        return _method + " " + _uri + " " + _protocol;
     }
 
     @Override

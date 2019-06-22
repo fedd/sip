@@ -55,8 +55,8 @@ public class RequestReceived extends MessageReceived implements Request {
     }
 
     @Override
-    public RequestToSend getToForward(String via) {
-        RequestToSend ret = new RequestToSend(_protocol, _method, _uri, getHeaders(), getBody());
+    public RequestSendable getToForward(String via) {
+        RequestSendable ret = new RequestSendable(_protocol, _method, _uri, getHeaders(), getBody());
         LinkedHashMap<String, List<String>> headers = ret.getHeaders();
         List<String> vias = headers.get("Via");
         vias.add(0, via);
@@ -82,8 +82,8 @@ public class RequestReceived extends MessageReceived implements Request {
         return ret;
     }
 
-    public ResponseToSend getToRespond(String statusCode, String statusName, InputStream body) {
-        return new ResponseToSend(_protocol, statusCode, statusName, getHeaders(), body);
+    public ResponseSendable getToRespond(String statusCode, String statusName, InputStream body) {
+        return new ResponseSendable(_protocol, statusCode, statusName, getHeaders(), body);
     }
 
 }

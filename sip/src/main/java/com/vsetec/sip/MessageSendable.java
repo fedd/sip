@@ -27,16 +27,14 @@ import java.util.Map;
  *
  * @author fedd
  */
-public abstract class MessageToSend implements Message {
+public abstract class MessageSendable implements Message, Sendable {
 
-    private final String _firstLine;
-    private final LinkedHashMap<String, List<String>> _headers;
+    private final LinkedHashMap<String, List<String>> _headers = new LinkedHashMap<>(5);
     private final InputStream _body;
 
-    MessageToSend(String protocol, String method, String uri, LinkedHashMap<String, List<String>> headers, InputStream body) {
+    MessageSendable(LinkedHashMap<String, List<String>> headers, InputStream body) {
 
-        _firstLine = method + " " + uri + " " + protocol;
-        _headers = new LinkedHashMap(headers);
+        _headers.putAll(headers);
         _body = body;
 
     }
@@ -46,6 +44,9 @@ public abstract class MessageToSend implements Message {
         return _headers;
     }
 
+    abstract String getFirstLine();
+
+    @Override
     public InputStream getAsStream() {
 
         InputStream ret = new InputStream() {
@@ -54,7 +55,7 @@ public abstract class MessageToSend implements Message {
             private InputStream _currentStream;
 
             {
-                StringBuilder h = new StringBuilder(_firstLine);
+                StringBuilder h = new StringBuilder(getFirstLine());
                 h.append("\r\n");
                 for (Map.Entry<String, List<String>> kv : _headers.entrySet()) {
                     String headerName = kv.getKey();

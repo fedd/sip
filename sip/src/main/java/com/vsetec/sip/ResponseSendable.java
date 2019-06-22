@@ -23,14 +23,14 @@ import java.util.List;
  *
  * @author fedd
  */
-public class ResponseToSend extends MessageToSend implements Response {
+public class ResponseSendable extends MessageSendable implements Response {
 
     private final String _protocol;
     private final String _statusCode;
     private final String _statusName;
 
-    public ResponseToSend(String protocol, String statusCode, String statusName, LinkedHashMap<String, List<String>> headers, InputStream body) {
-        super(protocol, statusCode, statusName, headers, body);
+    public ResponseSendable(String protocol, String statusCode, String statusName, LinkedHashMap<String, List<String>> headers, InputStream body) {
+        super(headers, body);
         _protocol = protocol;
         _statusCode = statusCode;
         _statusName = statusName;
@@ -49,6 +49,11 @@ public class ResponseToSend extends MessageToSend implements Response {
     @Override
     public String getStatusName() {
         return _statusName;
+    }
+
+    @Override
+    String getFirstLine() {
+        return _protocol + " " + _statusCode + " " + _statusName;
     }
 
 }
