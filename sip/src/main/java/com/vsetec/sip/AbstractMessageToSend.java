@@ -33,7 +33,7 @@ public abstract class AbstractMessageToSend implements MessageToSend {
     private final LinkedHashMap<String, Object> _headers;
     private final InputStream _body;
 
-    public AbstractMessageToSend(String firstLine, Map<String, Object> headers, InputStream body) throws IOException {
+    public AbstractMessageToSend(String firstLine, Map<String, Object> headers, InputStream body) {
 
         _firstLine = firstLine;
         _headers = new LinkedHashMap(headers);
@@ -42,7 +42,7 @@ public abstract class AbstractMessageToSend implements MessageToSend {
     }
 
     @Override
-    public String getFirstLine() {
+    public final String getFirstLine() {
         return _firstLine;
     }
 
