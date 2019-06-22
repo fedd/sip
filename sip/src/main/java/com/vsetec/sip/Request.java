@@ -24,4 +24,5 @@ public interface Request extends Message {
     String getMethod();
 
     String getUri();
+
 }

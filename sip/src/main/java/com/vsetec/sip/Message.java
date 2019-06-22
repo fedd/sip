@@ -24,8 +24,6 @@ import java.util.List;
  */
 public interface Message {
 
-    String getFirstLine();
-
     LinkedHashMap<String, List<String>> getHeaders();
 
     String getProtocol();

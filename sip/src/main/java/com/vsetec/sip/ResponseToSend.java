@@ -29,12 +29,11 @@ public class ResponseToSend extends MessageToSend implements Response {
     private final String _statusCode;
     private final String _statusName;
 
-    public ResponseToSend(String firstLine, LinkedHashMap<String, List<String>> headers, InputStream body) {
-        super(firstLine, headers, body);
-        String[] split = getFirstLine().split("\\s+");
-        _protocol = split[0];
-        _statusCode = split[1];
-        _statusName = split[2];
+    public ResponseToSend(String protocol, String statusCode, String statusName, LinkedHashMap<String, List<String>> headers, InputStream body) {
+        super(protocol, statusCode, statusName, headers, body);
+        _protocol = protocol;
+        _statusCode = statusCode;
+        _statusName = statusName;
     }
 
     @Override

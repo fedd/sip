@@ -56,7 +56,7 @@ public class ResponseReceived extends MessageReceived implements Response {
 
     @Override
     public ResponseToSend getToForward(String via) {
-        ResponseToSend ret = new ResponseToSend(_protocol, getHeaders(), getBody());
+        ResponseToSend ret = new ResponseToSend(_protocol, _statusCode, _statusName, getHeaders(), getBody());
         LinkedHashMap<String, List<String>> headers = ret.getHeaders();
         List<String> vias = headers.get("Via");
         if (!vias.isEmpty()) {

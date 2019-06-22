@@ -33,7 +33,7 @@ public abstract class MessageReceived implements Message {
     private final LinkedHashMap<String, List<String>> _headers = new LinkedHashMap();
     private final InputStream _body;
 
-    public MessageReceived(InputStream source) throws IOException {
+    MessageReceived(InputStream source) throws IOException {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(source, "UTF-8"));
 
@@ -65,8 +65,7 @@ public abstract class MessageReceived implements Message {
 
     }
 
-    @Override
-    public final String getFirstLine() {
+    final String getFirstLine() {
         return _firstLine;
     }
 

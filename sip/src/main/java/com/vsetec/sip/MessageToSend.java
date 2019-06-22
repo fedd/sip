@@ -33,17 +33,12 @@ public abstract class MessageToSend implements Message {
     private final LinkedHashMap<String, List<String>> _headers;
     private final InputStream _body;
 
-    public MessageToSend(String firstLine, LinkedHashMap<String, List<String>> headers, InputStream body) {
+    MessageToSend(String protocol, String method, String uri, LinkedHashMap<String, List<String>> headers, InputStream body) {
 
-        _firstLine = firstLine;
+        _firstLine = method + " " + uri + " " + protocol;
         _headers = new LinkedHashMap(headers);
         _body = body;
 
-    }
-
-    @Override
-    public final String getFirstLine() {
-        return _firstLine;
     }
 
     @Override
@@ -51,7 +46,7 @@ public abstract class MessageToSend implements Message {
         return _headers;
     }
 
-    public InputStream getStream() {
+    public InputStream getAsStream() {
 
         InputStream ret = new InputStream() {
 

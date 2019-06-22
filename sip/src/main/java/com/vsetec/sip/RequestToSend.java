@@ -19,12 +19,11 @@ public class RequestToSend extends MessageToSend implements Request {
     private final String _method;
     private final String _uri;
 
-    public RequestToSend(String firstLine, LinkedHashMap<String, List<String>> headers, InputStream body) {
-        super(firstLine, headers, body);
-        String[] split = getFirstLine().split("\\s+");
-        _method = split[0];
-        _uri = split[1];
-        _protocol = split[2];
+    public RequestToSend(String protocol, String method, String uri, LinkedHashMap<String, List<String>> headers, InputStream body) {
+        super(protocol, method, uri, headers, body);
+        _method = method;
+        _uri = uri;
+        _protocol = protocol;
     }
 
     @Override
