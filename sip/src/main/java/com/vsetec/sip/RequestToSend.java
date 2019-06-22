@@ -5,9 +5,9 @@
  */
 package com.vsetec.sip;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  *
@@ -19,7 +19,7 @@ public class RequestToSend extends AbstractMessageToSend implements Request {
     private final String _method;
     private final String _uri;
 
-    public RequestToSend(String firstLine, Map<String, Object> headers, InputStream body) throws IOException {
+    public RequestToSend(String firstLine, LinkedHashMap<String, List<String>> headers, InputStream body) {
         super(firstLine, headers, body);
         String[] split = getFirstLine().split("\\s+");
         _method = split[0];

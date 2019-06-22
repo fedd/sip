@@ -15,8 +15,8 @@
  */
 package com.vsetec.sip;
 
-import java.io.InputStream;
-import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  *
@@ -26,7 +26,7 @@ public interface Message {
 
     String getFirstLine();
 
-    Map<String, Object> getHeaders();
+    LinkedHashMap<String, List<String>> getHeaders();
 
     String getProtocol();
 

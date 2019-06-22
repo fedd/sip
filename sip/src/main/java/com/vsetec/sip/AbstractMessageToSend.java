@@ -30,10 +30,10 @@ import java.util.Map;
 public abstract class AbstractMessageToSend implements MessageToSend {
 
     private final String _firstLine;
-    private final LinkedHashMap<String, Object> _headers;
+    private final LinkedHashMap<String, List<String>> _headers;
     private final InputStream _body;
 
-    public AbstractMessageToSend(String firstLine, Map<String, Object> headers, InputStream body) {
+    public AbstractMessageToSend(String firstLine, LinkedHashMap<String, List<String>> headers, InputStream body) {
 
         _firstLine = firstLine;
         _headers = new LinkedHashMap(headers);
@@ -47,7 +47,7 @@ public abstract class AbstractMessageToSend implements MessageToSend {
     }
 
     @Override
-    public LinkedHashMap getHeaders() {
+    public LinkedHashMap<String, List<String>> getHeaders() {
         return _headers;
     }
 
@@ -62,20 +62,13 @@ public abstract class AbstractMessageToSend implements MessageToSend {
             {
                 StringBuilder h = new StringBuilder(_firstLine);
                 h.append("\r\n");
-                for (Map.Entry<String, Object> kv : _headers.entrySet()) {
+                for (Map.Entry<String, List<String>> kv : _headers.entrySet()) {
                     String headerName = kv.getKey();
-                    if (headerName.equals("Via")) {
-                        List<String> vias = (List<String>) kv.getValue();
-                        for (String via : vias) {
-                            h.append(headerName);
-                            h.append(": ");
-                            h.append(via);
-                            h.append("\r\n");
-                        }
-                    } else {
+                    List<String> vias = kv.getValue();
+                    for (String via : vias) {
                         h.append(headerName);
                         h.append(": ");
-                        h.append(kv.getValue());
+                        h.append(via);
                         h.append("\r\n");
                     }
                 }

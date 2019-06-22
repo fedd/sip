@@ -24,4 +24,7 @@ import java.io.InputStream;
 public interface MessageReceived extends Message {
 
     InputStream getBody();
+
+    MessageToSend getToForward(String via);
+
 }

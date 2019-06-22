@@ -17,6 +17,9 @@ package com.vsetec.sip;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  *
@@ -49,6 +52,36 @@ public class ResponseReceived extends AbstractMessageReceived implements Respons
     @Override
     public String getStatusName() {
         return _statusName;
+    }
+
+    @Override
+    public ResponseToSend getToForward(String via) {
+        ResponseToSend ret = new ResponseToSend(_protocol, getHeaders(), getBody());
+        LinkedHashMap<String, List<String>> headers = ret.getHeaders();
+        List<String> vias = headers.get("Via");
+        if (!vias.isEmpty()) {
+            vias.remove(0);
+        }
+        List<String> maxForwards = headers.get("Max-Forwards");
+        if (maxForwards == null) {
+            maxForwards = new ArrayList<>();
+            maxForwards.add("70");
+        } else {
+            if (maxForwards.isEmpty()) {
+                maxForwards.add("70");
+            } else {
+                String mf = maxForwards.get(0);
+                maxForwards.clear();
+                try {
+                    int mfi = Integer.parseInt(mf);
+                    mfi--;
+                    maxForwards.add(mf);
+                } catch (NumberFormatException e) {
+                    maxForwards.add("70");
+                }
+            }
+        }
+        return ret;
     }
 
 }

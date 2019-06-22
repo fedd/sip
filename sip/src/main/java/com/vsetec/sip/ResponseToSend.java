@@ -16,7 +16,8 @@
 package com.vsetec.sip;
 
 import java.io.InputStream;
-import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  *
@@ -28,7 +29,7 @@ public class ResponseToSend extends AbstractMessageToSend implements Response {
     private final String _statusCode;
     private final String _statusName;
 
-    public ResponseToSend(String firstLine, Map<String, Object> headers, InputStream body) {
+    public ResponseToSend(String firstLine, LinkedHashMap<String, List<String>> headers, InputStream body) {
         super(firstLine, headers, body);
         String[] split = getFirstLine().split("\\s+");
         _protocol = split[0];

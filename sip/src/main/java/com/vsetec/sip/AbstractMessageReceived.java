@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  *
@@ -29,7 +30,7 @@ import java.util.LinkedHashMap;
 public abstract class AbstractMessageReceived implements MessageReceived {
 
     private final String _firstLine;
-    private final LinkedHashMap<String, Object> _headers = new LinkedHashMap();
+    private final LinkedHashMap<String, List<String>> _headers = new LinkedHashMap();
     private final InputStream _body;
 
     public AbstractMessageReceived(InputStream source) throws IOException {
@@ -49,16 +50,12 @@ public abstract class AbstractMessageReceived implements MessageReceived {
 
             String headerName = header.substring(0, idx);
             String headerValue = header.substring(idx + 1, header.length());
-            if (headerName.equals("Via")) { // multiple vias
-                ArrayList<String> vias = (ArrayList<String>) _headers.get("Via");
-                if (vias == null) {
-                    vias = new ArrayList<>(4);
-                    _headers.put("Via", vias);
-                }
-                vias.add(headerValue);
-            } else {
-                _headers.put(headerName, headerValue);
+            List<String> values = _headers.get(headerName);
+            if (values == null) {
+                values = new ArrayList<>(4);
+                _headers.put(headerName, values);
             }
+            values.add(headerValue);
 
             header = reader.readLine();
         }
@@ -74,7 +71,7 @@ public abstract class AbstractMessageReceived implements MessageReceived {
     }
 
     @Override
-    public LinkedHashMap<String, Object> getHeaders() {
+    public LinkedHashMap<String, List<String>> getHeaders() {
         return _headers;
     }
 
