@@ -15,9 +15,9 @@ import java.util.List;
  */
 public class RequestSendable extends MessageSendable implements Request {
 
-    private final String _protocol;
-    private final String _method;
-    private final String _uri;
+    private String _protocol;
+    private String _method;
+    private String _uri;
 
     public RequestSendable(String protocol, String method, String uri, LinkedHashMap<String, List<String>> headers, InputStream body) {
         super(headers, body);
@@ -36,13 +36,26 @@ public class RequestSendable extends MessageSendable implements Request {
         return _protocol;
     }
 
+    public void setProtocol(String protocol) {
+        this._protocol = protocol;
+    }
+
     @Override
     public String getMethod() {
         return _method;
+    }
+
+    public void setMethod(String method) {
+        this._method = method;
     }
 
     @Override
     public String getUri() {
         return _uri;
     }
+
+    public void setUri(String uri) {
+        this._uri = uri;
+    }
+
 }

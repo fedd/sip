@@ -30,7 +30,7 @@ import java.util.Map;
 public abstract class MessageSendable implements Message, Sendable {
 
     private final LinkedHashMap<String, List<String>> _headers = new LinkedHashMap<>(5);
-    private final InputStream _body;
+    private InputStream _body;
 
     MessageSendable(LinkedHashMap<String, List<String>> headers, InputStream body) {
 
@@ -45,6 +45,10 @@ public abstract class MessageSendable implements Message, Sendable {
     }
 
     abstract String getFirstLine();
+
+    public void setBody(InputStream body) {
+        this._body = body;
+    }
 
     @Override
     public InputStream getAsStream() {

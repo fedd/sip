@@ -25,9 +25,9 @@ import java.util.List;
  */
 public class ResponseSendable extends MessageSendable implements Response {
 
-    private final String _protocol;
-    private final String _statusCode;
-    private final String _statusName;
+    private String _protocol;
+    private String _statusCode;
+    private String _statusName;
 
     public ResponseSendable(String protocol, String statusCode, String statusName, LinkedHashMap<String, List<String>> headers, InputStream body) {
         super(headers, body);
@@ -41,14 +41,26 @@ public class ResponseSendable extends MessageSendable implements Response {
         return _protocol;
     }
 
+    public void setProtocol(String protocol) {
+        this._protocol = protocol;
+    }
+
     @Override
     public String getStatusCode() {
         return _statusCode;
     }
 
+    public void setStatusCode(String statusCode) {
+        this._statusCode = statusCode;
+    }
+
     @Override
     public String getStatusName() {
         return _statusName;
+    }
+
+    public void setStatusName(String statusName) {
+        this._statusName = statusName;
     }
 
     @Override
