@@ -19,7 +19,7 @@ public class RequestSendable extends MessageSendable implements Request {
     private String _method;
     private String _uri;
 
-    public RequestSendable(String protocol, String method, String uri, LinkedHashMap<String, List<String>> headers, InputStream body) {
+    public RequestSendable(String protocol, String method, String uri, LinkedHashMap<String, Object> headers, InputStream body) {
         super(headers, body);
         _method = method;
         _uri = uri;

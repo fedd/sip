@@ -17,7 +17,6 @@ package com.vsetec.sip;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -57,26 +56,19 @@ public class RequestReceived extends MessageReceived implements Request {
     @Override
     public RequestSendable getToForward(String via) {
         RequestSendable ret = new RequestSendable(_protocol, _method, _uri, getHeaders(), getBody());
-        LinkedHashMap<String, List<String>> headers = ret.getHeaders();
-        List<String> vias = headers.get("Via");
+        LinkedHashMap<String, Object> headers = ret.getHeaders();
+        List<String> vias = (List<String>) headers.get("Via");
         vias.add(0, via);
-        List<String> maxForwards = headers.get("Max-Forwards");
+        String maxForwards = (String) headers.get("Max-Forwards");
         if (maxForwards == null) {
-            maxForwards = new ArrayList<>();
-            maxForwards.add("70");
+            headers.put("Max-Forwards", "70");
         } else {
-            if (maxForwards.isEmpty()) {
-                maxForwards.add("70");
-            } else {
-                String mf = maxForwards.get(0);
-                maxForwards.clear();
-                try {
-                    int mfi = Integer.parseInt(mf);
-                    mfi--;
-                    maxForwards.add(Integer.toString(mfi));
-                } catch (NumberFormatException e) {
-                    maxForwards.add("70");
-                }
+            try {
+                int mfi = Integer.parseInt(maxForwards);
+                mfi--;
+                headers.put("Max-Forwards", Integer.toString(mfi));
+            } catch (NumberFormatException e) {
+                headers.put("Max-Forwards", "70");
             }
         }
         return ret;

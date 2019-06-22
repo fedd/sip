@@ -16,7 +16,6 @@
 package com.vsetec.sip;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 
 /**
  *
@@ -24,7 +23,7 @@ import java.util.List;
  */
 public interface Message {
 
-    LinkedHashMap<String, List<String>> getHeaders();
+    LinkedHashMap<String, Object> getHeaders();
 
     String getProtocol();
 

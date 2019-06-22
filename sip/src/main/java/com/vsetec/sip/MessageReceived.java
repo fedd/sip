@@ -20,6 +20,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -29,8 +32,16 @@ import java.util.List;
  */
 public abstract class MessageReceived implements Message, Received {
 
+    private static final Collection<String> MULTIHEADERS;
+
+    static {
+        String[] multiheaders = new String[]{"Via", "Record-Route"};
+        HashSet<String> hs = new HashSet(Arrays.asList(multiheaders));
+        MULTIHEADERS = hs;
+    }
+
     private final String _firstLine;
-    private final LinkedHashMap<String, List<String>> _headers = new LinkedHashMap();
+    private final LinkedHashMap<String, Object> _headers = new LinkedHashMap();
     private final InputStream _body;
 
     MessageReceived(InputStream source) throws IOException {
@@ -50,12 +61,22 @@ public abstract class MessageReceived implements Message, Received {
 
             String headerName = header.substring(0, idx);
             String headerValue = header.substring(idx + 1, header.length());
-            List<String> values = _headers.get(headerName);
-            if (values == null) {
-                values = new ArrayList<>(4);
-                _headers.put(headerName, values);
+
+            if (MULTIHEADERS.contains(headerName)) {
+
+                List<String> values = (List<String>) _headers.get(headerName);
+
+                if (values == null) {
+                    values = new ArrayList<>(4);
+                    _headers.put(headerName, values);
+                }
+                values.add(headerValue);
+
+            } else {
+
+                _headers.put(headerName, headerValue);
+
             }
-            values.add(headerValue);
 
             header = reader.readLine();
         }
@@ -70,7 +91,7 @@ public abstract class MessageReceived implements Message, Received {
     }
 
     @Override
-    public LinkedHashMap<String, List<String>> getHeaders() {
+    public LinkedHashMap<String, Object> getHeaders() {
         return _headers;
     }
 
