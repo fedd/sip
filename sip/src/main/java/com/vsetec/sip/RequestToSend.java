@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author fedd
  */
-public class RequestToSend extends AbstractMessageToSend implements Request {
+public class RequestToSend extends MessageToSend implements Request {
 
     private final String _protocol;
     private final String _method;

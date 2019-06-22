@@ -23,7 +23,7 @@ import java.util.List;
  *
  * @author fedd
  */
-public class ResponseToSend extends AbstractMessageToSend implements Response {
+public class ResponseToSend extends MessageToSend implements Response {
 
     private final String _protocol;
     private final String _statusCode;

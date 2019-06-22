@@ -15,16 +15,70 @@
  */
 package com.vsetec.sip;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  *
  * @author fedd
  */
-public interface MessageReceived extends Message {
+public abstract class MessageReceived implements Message {
 
-    InputStream getBody();
+    private final String _firstLine;
+    private final LinkedHashMap<String, List<String>> _headers = new LinkedHashMap();
+    private final InputStream _body;
 
-    MessageToSend getToForward(String via);
+    public MessageReceived(InputStream source) throws IOException {
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(source, "UTF-8"));
+
+        // read first line
+        _firstLine = reader.readLine();
+
+        // read headers
+        String header = reader.readLine();
+        while (header.length() > 0) {
+            int idx = header.indexOf(":");
+            if (idx == -1) {
+                continue;
+            }
+
+            String headerName = header.substring(0, idx);
+            String headerValue = header.substring(idx + 1, header.length());
+            List<String> values = _headers.get(headerName);
+            if (values == null) {
+                values = new ArrayList<>(4);
+                _headers.put(headerName, values);
+            }
+            values.add(headerValue);
+
+            header = reader.readLine();
+        }
+
+        // make the rest as body
+        _body = source;
+
+    }
+
+    @Override
+    public final String getFirstLine() {
+        return _firstLine;
+    }
+
+    @Override
+    public LinkedHashMap<String, List<String>> getHeaders() {
+        return _headers;
+    }
+
+    public InputStream getBody() {
+        return _body;
+    }
+
+    public abstract MessageToSend getToForward(String via);
 
 }

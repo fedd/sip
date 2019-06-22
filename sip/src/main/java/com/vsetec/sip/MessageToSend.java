@@ -15,13 +15,81 @@
  */
 package com.vsetec.sip;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author fedd
  */
-public interface MessageToSend extends Message {
+public abstract class MessageToSend implements Message {
 
-    InputStream getStream();
+    private final String _firstLine;
+    private final LinkedHashMap<String, List<String>> _headers;
+    private final InputStream _body;
+
+    public MessageToSend(String firstLine, LinkedHashMap<String, List<String>> headers, InputStream body) {
+
+        _firstLine = firstLine;
+        _headers = new LinkedHashMap(headers);
+        _body = body;
+
+    }
+
+    @Override
+    public final String getFirstLine() {
+        return _firstLine;
+    }
+
+    @Override
+    public LinkedHashMap<String, List<String>> getHeaders() {
+        return _headers;
+    }
+
+    public InputStream getStream() {
+
+        InputStream ret = new InputStream() {
+
+            private boolean _switched = false;
+            private InputStream _currentStream;
+
+            {
+                StringBuilder h = new StringBuilder(_firstLine);
+                h.append("\r\n");
+                for (Map.Entry<String, List<String>> kv : _headers.entrySet()) {
+                    String headerName = kv.getKey();
+                    List<String> vias = kv.getValue();
+                    for (String via : vias) {
+                        h.append(headerName);
+                        h.append(": ");
+                        h.append(via);
+                        h.append("\r\n");
+                    }
+                }
+                h.append("\r\n");
+
+                _currentStream = new ByteArrayInputStream(h.toString().getBytes(StandardCharsets.UTF_8));
+            }
+
+            @Override
+            public int read() throws IOException {
+                int ret = _currentStream.read();
+                if (ret == -1) {
+                    if (_switched) {
+                        return ret;
+                    }
+                    _currentStream = _body;
+                    _switched = true;
+                    ret = _currentStream.read();
+                }
+                return ret;
+            }
+        };
+        return ret;
+    }
 }

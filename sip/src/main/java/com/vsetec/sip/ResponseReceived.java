@@ -25,7 +25,7 @@ import java.util.List;
  *
  * @author fedd
  */
-public class ResponseReceived extends AbstractMessageReceived implements Response {
+public class ResponseReceived extends MessageReceived implements Response {
 
     private final String _protocol;
     private final String _statusCode;
