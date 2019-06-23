@@ -76,6 +76,6 @@ public abstract class MessageReceived implements Message, Received {
         return _body;
     }
 
-    public abstract MessageSendable getToForward(String via);
+    public abstract MessageSendable getToForward();
 
 }

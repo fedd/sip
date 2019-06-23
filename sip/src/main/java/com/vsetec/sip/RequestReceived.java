@@ -54,11 +54,9 @@ public class RequestReceived extends MessageReceived implements Request {
     }
 
     @Override
-    public RequestSendable getToForward(String via) {
+    public RequestSendable getToForward() {
         RequestSendable ret = new RequestSendable(_protocol, _method, _uri, getHeaders(), getBody());
         Map<String, List<Object>> headers = ret.getHeaders();
-        List<Object> vias = headers.get("Via");
-        vias.add(0, via);
         List<Object> maxForwards = headers.get("Max-Forwards");
         if (maxForwards.isEmpty()) {
             maxForwards.add("70");
