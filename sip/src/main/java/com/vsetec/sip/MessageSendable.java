@@ -15,11 +15,11 @@
  */
 package com.vsetec.sip;
 
+import com.vsetec.sip.util.MapOfLists;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,10 +29,10 @@ import java.util.Map;
  */
 public abstract class MessageSendable implements Message, Sendable {
 
-    private final LinkedHashMap<String, Object> _headers = new LinkedHashMap<>(5);
+    private final MapOfLists _headers = new MapOfLists();
     private InputStream _body;
 
-    MessageSendable(LinkedHashMap<String, Object> headers, InputStream body) {
+    MessageSendable(Map<String, List<Object>> headers, InputStream body) {
 
         _headers.putAll(headers);
         _body = body;
@@ -40,7 +40,7 @@ public abstract class MessageSendable implements Message, Sendable {
     }
 
     @Override
-    public LinkedHashMap<String, Object> getHeaders() {
+    public Map<String, List<Object>> getHeaders() {
         return _headers;
     }
 
@@ -61,21 +61,13 @@ public abstract class MessageSendable implements Message, Sendable {
             {
                 StringBuilder h = new StringBuilder(getFirstLine());
                 h.append("\r\n");
-                for (Map.Entry<String, Object> kv : _headers.entrySet()) {
+                for (Map.Entry<String, List<Object>> kv : _headers.entrySet()) {
                     String headerName = kv.getKey();
-                    Object headerValue = kv.getValue();
-                    if (headerValue instanceof List) {
-                        List<String> vias = (List<String>) headerValue;
-                        for (String via : vias) {
-                            h.append(headerName);
-                            h.append(": ");
-                            h.append(via);
-                            h.append("\r\n");
-                        }
-                    } else {
+                    List headerValue = kv.getValue();
+                    for (Object via : headerValue) {
                         h.append(headerName);
                         h.append(": ");
-                        h.append(headerValue);
+                        h.append(via);
                         h.append("\r\n");
                     }
                 }

@@ -17,8 +17,8 @@ package com.vsetec.sip;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -56,19 +56,19 @@ public class RequestReceived extends MessageReceived implements Request {
     @Override
     public RequestSendable getToForward(String via) {
         RequestSendable ret = new RequestSendable(_protocol, _method, _uri, getHeaders(), getBody());
-        LinkedHashMap<String, Object> headers = ret.getHeaders();
-        List<String> vias = (List<String>) headers.get("Via");
+        Map<String, List<Object>> headers = ret.getHeaders();
+        List<Object> vias = headers.get("Via");
         vias.add(0, via);
-        String maxForwards = (String) headers.get("Max-Forwards");
-        if (maxForwards == null) {
-            headers.put("Max-Forwards", "70");
+        List<Object> maxForwards = headers.get("Max-Forwards");
+        if (maxForwards.isEmpty()) {
+            maxForwards.add("70");
         } else {
             try {
-                int mfi = Integer.parseInt(maxForwards);
+                int mfi = Integer.parseInt((String) maxForwards.remove(0));
                 mfi--;
-                headers.put("Max-Forwards", Integer.toString(mfi));
+                maxForwards.add(Integer.toString(mfi));
             } catch (NumberFormatException e) {
-                headers.put("Max-Forwards", "70");
+                maxForwards.add("70");
             }
         }
         return ret;

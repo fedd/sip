@@ -11,4 +11,12 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     <name>SIP</name>
+    <dependencies>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2.2</version>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
 </project>

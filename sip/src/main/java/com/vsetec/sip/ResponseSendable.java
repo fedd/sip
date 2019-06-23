@@ -16,7 +16,8 @@
 package com.vsetec.sip;
 
 import java.io.InputStream;
-import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -28,7 +29,7 @@ public class ResponseSendable extends MessageSendable implements Response {
     private String _statusCode;
     private String _statusName;
 
-    public ResponseSendable(String protocol, String statusCode, String statusName, LinkedHashMap<String, Object> headers, InputStream body) {
+    public ResponseSendable(String protocol, String statusCode, String statusName, Map<String, List<Object>> headers, InputStream body) {
         super(headers, body);
         _protocol = protocol;
         _statusCode = statusCode;
