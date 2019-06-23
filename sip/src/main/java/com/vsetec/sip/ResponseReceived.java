@@ -15,7 +15,6 @@
  */
 package com.vsetec.sip;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
@@ -30,12 +29,16 @@ public class ResponseReceived extends MessageReceived implements Response {
     private final String _statusCode;
     private final String _statusName;
 
-    public ResponseReceived(InputStream source) throws IOException {
-        super(source);
-        String[] split = getFirstLine().split("\\s+");
-        _protocol = split[0];
-        _statusCode = split[1];
-        _statusName = split[2];
+    ResponseReceived(String[] splitFirstLine, Map<String, List<Object>> headers, InputStream body) {
+        super(headers, body);
+        _protocol = splitFirstLine[0];
+        _statusCode = splitFirstLine[1];
+        _statusName = splitFirstLine[2];
+    }
+
+    @Override
+    public boolean isRequest() {
+        return false;
     }
 
     @Override

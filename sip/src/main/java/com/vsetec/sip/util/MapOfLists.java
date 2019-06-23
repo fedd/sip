@@ -27,7 +27,7 @@ import org.apache.commons.collections.map.ListOrderedMap;
 /**
  *
  * Magic Map that always has Lists as it's values
- * 
+ *
  * @author fedd
  */
 public class MapOfLists extends AbstractMap<String, List<Object>> {
@@ -122,7 +122,5 @@ public class MapOfLists extends AbstractMap<String, List<Object>> {
     public synchronized void putAll(Map<? extends String, ? extends List<Object>> m) {
         _wrapped.putAll(m);
     }
-    
-    
 
 }

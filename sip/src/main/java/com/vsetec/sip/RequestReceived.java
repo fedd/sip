@@ -15,7 +15,6 @@
  */
 package com.vsetec.sip;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
@@ -30,12 +29,16 @@ public class RequestReceived extends MessageReceived implements Request {
     private final String _method;
     private final String _uri;
 
-    public RequestReceived(InputStream source) throws IOException {
-        super(source);
-        String[] split = getFirstLine().split("\\s+");
-        _method = split[0];
-        _uri = split[1];
-        _protocol = split[2];
+    RequestReceived(String[] splitFirstLine, Map<String, List<Object>> headers, InputStream body) {
+        super(headers, body);
+        _method = splitFirstLine[0];
+        _uri = splitFirstLine[1];
+        _protocol = splitFirstLine[2];
+    }
+
+    @Override
+    public boolean isRequest() {
+        return true;
     }
 
     @Override

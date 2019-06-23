@@ -29,17 +29,16 @@ import java.util.Map;
  */
 public abstract class MessageReceived implements Message, Received {
 
-    private final String _firstLine;
-    private final Map<String, List<Object>> _headers = new MapOfLists();
+    private final Map<String, List<Object>> _headers;
     private final InputStream _body;
 
-    MessageReceived(InputStream source) throws IOException {
-
+    public static MessageReceived parse(InputStream source) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(source, "UTF-8"));
 
         // read first line
-        _firstLine = reader.readLine();
+        final String[] firstLine = reader.readLine().split("\\s+");
 
+        Map<String, List<Object>> headers = new MapOfLists();
         // read headers
         String header = reader.readLine();
         while (header.length() > 0) {
@@ -51,19 +50,23 @@ public abstract class MessageReceived implements Message, Received {
             String headerName = header.substring(0, idx);
             String headerValue = header.substring(idx + 1, header.length());
 
-            List<Object> values = _headers.get(headerName);
+            List<Object> values = headers.get(headerName);
             values.add(headerValue);
 
             header = reader.readLine();
         }
 
-        // make the rest as body
-        _body = source;
+        if (firstLine[0].startsWith("SIP")) { // it is a response
+            return new ResponseReceived(firstLine, headers, source);
+        } else {
+            return new RequestReceived(firstLine, headers, source);
+        }
 
     }
 
-    final String getFirstLine() {
-        return _firstLine;
+    MessageReceived(Map<String, List<Object>> headers, InputStream body) {
+        _headers = headers;
+        _body = body;
     }
 
     @Override
@@ -75,6 +78,8 @@ public abstract class MessageReceived implements Message, Received {
     public InputStream getBody() {
         return _body;
     }
+
+    public abstract boolean isRequest();
 
     public abstract MessageSendable getToForward();
 
