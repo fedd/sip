@@ -35,7 +35,7 @@ public abstract class MessageSendable implements Message, Sendable {
     MessageSendable(Map<String, List<Object>> headers, InputStream body) {
 
         _headers.putAll(headers);
-        _body = body;
+        setBody(body);
 
     }
 
@@ -46,8 +46,12 @@ public abstract class MessageSendable implements Message, Sendable {
 
     abstract String getFirstLine();
 
-    public void setBody(InputStream body) {
-        this._body = body;
+    public final void setBody(InputStream body) {
+        if (body == null) {
+            _body = new ByteArrayInputStream(new byte[0]);
+        } else {
+            _body = body;
+        }
     }
 
     @Override
